@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, Text, View,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity,TextInput,Alert } from 'react-native';
 import {Header} from 'react-native-elements';
-import { TextInput } from 'react-native-gesture-handler';
 import db from '../conifig';
 import * as firebase from 'firebase';
 
@@ -14,6 +13,21 @@ export default class WriteStoryScreen extends React.Component{
             storyAuthor : '',
             story : ''
         }
+    }
+
+    submit = async () => {
+        db.collection('stories'),add({
+            'title' : this.state.storyTitle,
+            'author' : this.state.storyAuthor,
+            'story' : this.state.story
+        })
+        Alert.alert('Story Submitted')
+        this.setState({
+            storyAuthor : '',
+            storyTitle : '',
+            story : ''
+        })
+
     }
 
     render(){
@@ -35,8 +49,6 @@ export default class WriteStoryScreen extends React.Component{
                                 storyTitle : text
                             })
                         }}
-                        value = {this.state.storyTitle}
-                        
                     />
 
                 <TextInput
@@ -47,7 +59,6 @@ export default class WriteStoryScreen extends React.Component{
                                 storyAuthor : text
                             })
                         }}
-                        value = {this.state.storyAuthor}
                     />
 
                 <TextInput
@@ -59,17 +70,11 @@ export default class WriteStoryScreen extends React.Component{
                                 story : text
                             })
                         }} 
-                        value = {this.state.story}
                     />
 
                 <TouchableOpacity style = {styles.submitButton}
-                onPress = {async()=> {
-                    this.setState({
-                        story : '',
-                        storyAuthor : '',
-                        storyTitle : ''
-                    })
-                }}>
+                onPress = {this.submit}
+                >
                     <Text style = {styles.buttonText} > Submit </Text>    
                 </TouchableOpacity>    
             </View>
